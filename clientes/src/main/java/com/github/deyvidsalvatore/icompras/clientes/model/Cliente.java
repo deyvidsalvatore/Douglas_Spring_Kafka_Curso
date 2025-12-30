@@ -1,12 +1,14 @@
 package com.github.deyvidsalvatore.icompras.clientes.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.io.Serial;
 import java.io.Serializable;
 
 @Entity
 @Table(name = "clientes")
+@Data
 public class Cliente implements Serializable {
 
     @Serial
