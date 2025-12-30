@@ -1,7 +1,7 @@
 -- Create Database for each microservice
 CREATE DATABASE icompraprodutos;
 CREATE DATABASE icompraclientes;
-CREATE DATABASE icompraservicos;
+CREATE DATABASE icomprapedidos;
 
 -- ICompraClientes
 CREATE TABLE clientes (
@@ -26,7 +26,7 @@ CREATE TABLE produtos (
 
 
 
--- ICompraServicos
+-- ICompraPedidos
 CREATE TABLE pedido(
                        codigo serial NOT NULL PRIMARY KEY,
                        codigo_cliente bigint NOT NULL,
