@@ -1,7 +1,9 @@
 package com.github.deyvidsalvatore.icompras.pedidos.service;
 
+import com.github.deyvidsalvatore.icompras.pedidos.model.Pedido;
 import com.github.deyvidsalvatore.icompras.pedidos.repository.ItemPedidoRepository;
 import com.github.deyvidsalvatore.icompras.pedidos.repository.PedidoRepository;
+import com.github.deyvidsalvatore.icompras.pedidos.validator.PedidoValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -10,6 +12,10 @@ import org.springframework.stereotype.Service;
 public class PedidoService {
 
     private final PedidoRepository pedidoRepository;
-
     private final ItemPedidoRepository itemPedidoRepository;
+    private final PedidoValidator pedidoValidator;
+
+    public Pedido criarPedido(Pedido pedido) {
+
+    }
 }

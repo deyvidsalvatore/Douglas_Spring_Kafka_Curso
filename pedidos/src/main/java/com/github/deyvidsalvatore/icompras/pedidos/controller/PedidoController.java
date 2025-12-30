@@ -1,6 +1,7 @@
 package com.github.deyvidsalvatore.icompras.pedidos.controller;
 
 import com.github.deyvidsalvatore.icompras.pedidos.dto.NovoPedidoDTO;
+import com.github.deyvidsalvatore.icompras.pedidos.mappers.PedidoMapper;
 import com.github.deyvidsalvatore.icompras.pedidos.service.PedidoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,8 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class PedidoController {
 
     private final PedidoService pedidoService;
+    private final PedidoMapper pedidoMapper;
 
-    public ResponseEntity criar(@RequestBody NovoPedidoDTO dto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(null);
+    public ResponseEntity<Long> criar(@RequestBody NovoPedidoDTO dto) {
+        var pedido = pedidoMapper.map(dto);
+        var novoPedido = pedidoService.criarPedido(pedido);
+        return ResponseEntity.status(HttpStatus.CREATED).body(novoPedido.getCodigo());
     }
 }

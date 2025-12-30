@@ -1,22 +1,19 @@
 package com.github.deyvidsalvatore.icompras.pedidos.dto;
 
+import com.github.deyvidsalvatore.icompras.pedidos.model.enums.TipoPagamento;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.List;
 
 @Getter
 @Setter
-public class NovoPedidoDTO implements Serializable {
+public class DadosPagamentoDTO implements Serializable {
 
     @Serial private static final long serialVersionUID = 1L;
 
-    private Long codigoCliente;
+    private String dados;
 
-    private DadosPagamentoDTO dadosPagamento;
-
-    private List<ItemPedidoDTO> itens;
-
+    private TipoPagamento tipoPagamento;
 }
