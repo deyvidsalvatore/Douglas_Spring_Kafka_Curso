@@ -1,22 +1,9 @@
 package com.github.deyvidsalvatore.icompras.pedidos.dto;
 
-import lombok.Getter;
-import lombok.Setter;
-
-import java.io.Serial;
-import java.io.Serializable;
 import java.util.List;
 
-@Getter
-@Setter
-public class NovoPedidoDTO implements Serializable {
-
-    @Serial private static final long serialVersionUID = 1L;
-
-    private Long codigoCliente;
-
-    private DadosPagamentoDTO dadosPagamento;
-
-    private List<ItemPedidoDTO> itens;
-
+public record NovoPedidoDTO(
+        Long codigoCliente,
+        DadosPagamentoDTO dadosPagamento,
+        List<ItemPedidoDTO> itens) {
 }

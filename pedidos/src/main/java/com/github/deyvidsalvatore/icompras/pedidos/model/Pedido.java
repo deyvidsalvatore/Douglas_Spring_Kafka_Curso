@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "pedidos")
+@Table(name = "pedido")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -53,6 +53,6 @@ public class Pedido implements Serializable {
     @Transient
     private DadosPagamento dadosPagamento;
 
-    @OneToMany(mappedBy = "codigoPedido")
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
     private List<ItemPedido> itens;
 }
