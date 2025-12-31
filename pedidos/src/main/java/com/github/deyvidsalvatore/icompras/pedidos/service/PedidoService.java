@@ -16,6 +16,6 @@ public class PedidoService {
     private final PedidoValidator pedidoValidator;
 
     public Pedido criarPedido(Pedido pedido) {
-
+        return null;
     }
 }
