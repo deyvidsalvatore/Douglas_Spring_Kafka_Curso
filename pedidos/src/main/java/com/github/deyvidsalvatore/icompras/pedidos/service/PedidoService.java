@@ -1,7 +1,12 @@
 package com.github.deyvidsalvatore.icompras.pedidos.service;
 
+import com.github.deyvidsalvatore.icompras.pedidos.client.ClientesClient;
+import com.github.deyvidsalvatore.icompras.pedidos.client.ProdutosClient;
 import com.github.deyvidsalvatore.icompras.pedidos.client.ServicoBancarioClient;
+import com.github.deyvidsalvatore.icompras.pedidos.client.represetation.ClienteRepresetation;
+import com.github.deyvidsalvatore.icompras.pedidos.client.represetation.ProdutoRepresentation;
 import com.github.deyvidsalvatore.icompras.pedidos.model.DadosPagamento;
+import com.github.deyvidsalvatore.icompras.pedidos.model.ItemPedido;
 import com.github.deyvidsalvatore.icompras.pedidos.model.Pedido;
 import com.github.deyvidsalvatore.icompras.pedidos.model.enums.StatusPedido;
 import com.github.deyvidsalvatore.icompras.pedidos.model.enums.TipoPagamento;
@@ -12,9 +17,11 @@ import com.github.deyvidsalvatore.icompras.pedidos.validator.PedidoValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -26,6 +33,8 @@ public class PedidoService {
     private final ItemPedidoRepository itemPedidoRepository;
     private final PedidoValidator pedidoValidator;
     private final ServicoBancarioClient servicoBancarioClient;
+    private final ClientesClient apiClientes;
+    private final ProdutosClient apiProdutos;
 
     @Transactional
     public Pedido criarPedido(Pedido pedido) {
@@ -90,6 +99,31 @@ public class PedidoService {
         pedidoRepository.save(pedido);
     }
 
+    public Optional<Pedido> carregarDadosCompleto(Long codigo) {
+        Optional<Pedido> pedido = pedidoRepository.findById(codigo);
+        pedido.ifPresent(this::carregarDadosCliente);
+        pedido.ifPresent(this::carregarItensPedido);
+        return pedido;
+    }
+
+    private void carregarDadosCliente(Pedido pedido) {
+        Long codigoCliente = pedido.getCodigoCliente();
+        ResponseEntity<ClienteRepresetation> response = apiClientes.obterDados(codigoCliente);
+        pedido.setDadosCliente(response.getBody());
+    }
+
+    private void carregarItensPedido(Pedido pedido) {
+        List<ItemPedido> itens = itemPedidoRepository.findByPedido(pedido);
+        pedido.setItens(itens);
+        pedido.getItens().forEach(this::carregarDadosProdutos);
+    }
+
+    private void carregarDadosProdutos(ItemPedido item) {
+        Long codigoProduto = item.getCodigoProduto();
+        ResponseEntity<ProdutoRepresentation> response = apiProdutos.obterDados(codigoProduto);
+        item.setNome(response.getBody().nome());
+    }
+
     private void enviarSolicitacaoPagamento(Pedido pedido) {
         String chavePagamento = servicoBancarioClient.solicitarPagamento(pedido);
         pedido.setChavePagamento(chavePagamento);
@@ -99,6 +133,5 @@ public class PedidoService {
         pedidoRepository.save(pedido);
         itemPedidoRepository.saveAll(pedido.getItens());
     }
-
 
 }

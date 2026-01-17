@@ -1,5 +1,6 @@
 package com.github.deyvidsalvatore.icompras.pedidos.model;
 
+import com.github.deyvidsalvatore.icompras.pedidos.client.represetation.ClienteRepresetation;
 import com.github.deyvidsalvatore.icompras.pedidos.model.enums.StatusPedido;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -55,4 +56,8 @@ public class Pedido implements Serializable {
 
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
     private List<ItemPedido> itens;
+
+    @Transient
+    private ClienteRepresetation dadosCliente;
+
 }

@@ -6,14 +6,13 @@ import com.github.deyvidsalvatore.icompras.pedidos.mappers.PedidoMapper;
 import com.github.deyvidsalvatore.icompras.pedidos.model.ErroResposta;
 import com.github.deyvidsalvatore.icompras.pedidos.model.exception.ItemNaoEncontradoException;
 import com.github.deyvidsalvatore.icompras.pedidos.model.exception.ValidationException;
+import com.github.deyvidsalvatore.icompras.pedidos.publisher.DetalhePedidoMapper;
+import com.github.deyvidsalvatore.icompras.pedidos.publisher.representation.DetalhePedidoRepresentation;
 import com.github.deyvidsalvatore.icompras.pedidos.service.PedidoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/pedidos")
@@ -22,6 +21,7 @@ public class PedidoController {
 
     private final PedidoService pedidoService;
     private final PedidoMapper pedidoMapper;
+    private final DetalhePedidoMapper detalhePedidoMapper;
 
     @PostMapping
     public ResponseEntity<?> criar(@RequestBody NovoPedidoDTO dto) {
@@ -46,5 +46,13 @@ public class PedidoController {
             var erro = new ErroResposta("Item não encontrado", "codigoPedido", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erro);
         }
+    }
+
+    @GetMapping("{codigo}")
+    public ResponseEntity<DetalhePedidoRepresentation> obterDetalhesPedido(@PathVariable Long codigo) {
+        return pedidoService.carregarDadosCompleto(codigo)
+                .map(detalhePedidoMapper::map)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }
