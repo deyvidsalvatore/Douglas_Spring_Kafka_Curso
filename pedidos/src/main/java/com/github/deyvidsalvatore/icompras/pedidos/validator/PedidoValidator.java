@@ -6,6 +6,7 @@ import com.github.deyvidsalvatore.icompras.pedidos.client.represetation.ClienteR
 import com.github.deyvidsalvatore.icompras.pedidos.client.represetation.ProdutoRepresentation;
 import com.github.deyvidsalvatore.icompras.pedidos.model.ItemPedido;
 import com.github.deyvidsalvatore.icompras.pedidos.model.Pedido;
+import com.github.deyvidsalvatore.icompras.pedidos.model.exception.ValidationException;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +34,8 @@ public class PedidoValidator {
           log.info("Cliente de código {} encontrando: {}", clienteRepresetation.codigo(), clienteRepresetation.nome());
         } catch (FeignException.NotFound e) {
             log.error("Cliente não encontrado");
+            var message = String.format("Cliente de código %d não encontrado", codigoCliente);
+            throw new ValidationException("codigoCliente", message);
         }
 
     }
@@ -44,6 +47,8 @@ public class PedidoValidator {
             log.info("Produto de código {} encontrado: {}", produtoRepresentation.codigo(), produtoRepresentation.nome());
         } catch (FeignException.NotFound e) {
             log.error("Produto não encontrado");
+            var message = String.format("Produto de código %d não encontrado", item.getCodigoProduto());
+            throw new ValidationException("codigoProduto", message);
         }
     }
 }
