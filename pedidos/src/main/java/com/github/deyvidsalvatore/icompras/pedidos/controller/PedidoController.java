@@ -1,8 +1,10 @@
 package com.github.deyvidsalvatore.icompras.pedidos.controller;
 
+import com.github.deyvidsalvatore.icompras.pedidos.dto.AdicaoNovoPagamentoDTO;
 import com.github.deyvidsalvatore.icompras.pedidos.dto.NovoPedidoDTO;
 import com.github.deyvidsalvatore.icompras.pedidos.mappers.PedidoMapper;
 import com.github.deyvidsalvatore.icompras.pedidos.model.ErroResposta;
+import com.github.deyvidsalvatore.icompras.pedidos.model.exception.ItemNaoEncontradoException;
 import com.github.deyvidsalvatore.icompras.pedidos.model.exception.ValidationException;
 import com.github.deyvidsalvatore.icompras.pedidos.service.PedidoService;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +31,19 @@ public class PedidoController {
             return ResponseEntity.status(HttpStatus.CREATED).body(novoPedido.getCodigo());
         } catch (ValidationException e) {
             var erro = new ErroResposta("Erro validação", e.getField(), e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erro);
+        }
+    }
+
+    @PostMapping("pagamentos")
+    public ResponseEntity<?> adicionarNovoPagamento(
+            @RequestBody AdicaoNovoPagamentoDTO dto
+    ) {
+        try {
+            pedidoService.adicionarNovoPagamento(dto.codigoPedido(), dto.dados(), dto.tipoPagamento());
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        } catch (ItemNaoEncontradoException e) {
+            var erro = new ErroResposta("Item não encontrado", "codigoPedido", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erro);
         }
     }

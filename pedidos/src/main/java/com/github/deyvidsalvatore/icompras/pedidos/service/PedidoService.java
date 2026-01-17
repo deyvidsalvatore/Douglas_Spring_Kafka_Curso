@@ -1,8 +1,11 @@
 package com.github.deyvidsalvatore.icompras.pedidos.service;
 
 import com.github.deyvidsalvatore.icompras.pedidos.client.ServicoBancarioClient;
+import com.github.deyvidsalvatore.icompras.pedidos.model.DadosPagamento;
 import com.github.deyvidsalvatore.icompras.pedidos.model.Pedido;
 import com.github.deyvidsalvatore.icompras.pedidos.model.enums.StatusPedido;
+import com.github.deyvidsalvatore.icompras.pedidos.model.enums.TipoPagamento;
+import com.github.deyvidsalvatore.icompras.pedidos.model.exception.ItemNaoEncontradoException;
 import com.github.deyvidsalvatore.icompras.pedidos.repository.ItemPedidoRepository;
 import com.github.deyvidsalvatore.icompras.pedidos.repository.PedidoRepository;
 import com.github.deyvidsalvatore.icompras.pedidos.validator.PedidoValidator;
@@ -53,6 +56,36 @@ public class PedidoService {
             pedido.setStatus(StatusPedido.ERRO_PAGAMENTO);
             pedido.setObservacoes(observacoes);
         }
+
+        pedidoRepository.save(pedido);
+    }
+
+    @Transactional
+    public void adicionarNovoPagamento(
+            Long codigoPedido,
+            String dados,
+            TipoPagamento tipoPagamento
+    ) {
+        var pedidoEncontrado =  pedidoRepository.findById(codigoPedido);
+
+        if (pedidoEncontrado.isEmpty()) {
+            var msg = String.format("Pedido com o código %d não foi encontrado!", codigoPedido);
+            log.error(msg);
+            throw new ItemNaoEncontradoException(msg);
+        }
+
+        var pedido = pedidoEncontrado.get();
+
+        DadosPagamento dadosPagamento = new DadosPagamento();
+        dadosPagamento.setTipoPagamento(tipoPagamento);
+        dadosPagamento.setDados(dados);
+
+        pedido.setDadosPagamento(dadosPagamento);
+        pedido.setStatus(StatusPedido.REALIZADO);
+        pedido.setObservacoes("Novo pagamento realizado, aguardando o processamento.");
+
+        String novaChavePagamento = servicoBancarioClient.solicitarPagamento(pedido);
+        pedido.setChavePagamento(novaChavePagamento);
 
         pedidoRepository.save(pedido);
     }
