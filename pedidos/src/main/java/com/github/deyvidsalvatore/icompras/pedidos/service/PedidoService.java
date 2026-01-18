@@ -11,12 +11,12 @@ import com.github.deyvidsalvatore.icompras.pedidos.model.Pedido;
 import com.github.deyvidsalvatore.icompras.pedidos.model.enums.StatusPedido;
 import com.github.deyvidsalvatore.icompras.pedidos.model.enums.TipoPagamento;
 import com.github.deyvidsalvatore.icompras.pedidos.model.exception.ItemNaoEncontradoException;
+import com.github.deyvidsalvatore.icompras.pedidos.publisher.PagamentoPublisher;
 import com.github.deyvidsalvatore.icompras.pedidos.repository.ItemPedidoRepository;
 import com.github.deyvidsalvatore.icompras.pedidos.repository.PedidoRepository;
 import com.github.deyvidsalvatore.icompras.pedidos.validator.PedidoValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.coyote.BadRequestException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +35,7 @@ public class PedidoService {
     private final ServicoBancarioClient servicoBancarioClient;
     private final ClientesClient apiClientes;
     private final ProdutosClient apiProdutos;
+    private final PagamentoPublisher pagamentoPublisher;
 
     @Transactional
     public Pedido criarPedido(Pedido pedido) {
@@ -60,7 +61,7 @@ public class PedidoService {
         Pedido pedido = pedidoEncontrado.get();
 
         if (sucesso) {
-            pedido.setStatus(StatusPedido.PAGO);
+            prepararEPublicarPedidoPago(pedido);
         } else {
             pedido.setStatus(StatusPedido.ERRO_PAGAMENTO);
             pedido.setObservacoes(observacoes);
@@ -104,6 +105,13 @@ public class PedidoService {
         pedido.ifPresent(this::carregarDadosCliente);
         pedido.ifPresent(this::carregarItensPedido);
         return pedido;
+    }
+
+    private void prepararEPublicarPedidoPago(Pedido pedido) {
+        pedido.setStatus(StatusPedido.PAGO);
+        carregarDadosCliente(pedido);
+        carregarItensPedido(pedido);
+        pagamentoPublisher.publicar(pedido);
     }
 
     private void carregarDadosCliente(Pedido pedido) {
