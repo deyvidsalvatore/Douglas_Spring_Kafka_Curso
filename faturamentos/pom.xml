@@ -29,6 +29,7 @@
 	<properties>
 		<java.version>21</java.version>
 		<minio.version>8.5.17</minio.version>
+		<jasper.version>7.0.0</jasper.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -46,6 +47,17 @@
 			<version>${minio.version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports</artifactId>
+			<version>${jasper.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports-pdf</artifactId>
+			<version>${jasper.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.datatype</groupId>
 			<artifactId>jackson-datatype-jdk8</artifactId>
