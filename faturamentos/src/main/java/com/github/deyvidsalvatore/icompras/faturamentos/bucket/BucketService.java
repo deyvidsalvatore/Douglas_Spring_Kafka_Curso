@@ -4,8 +4,11 @@ import com.github.deyvidsalvatore.icompras.faturamentos.config.props.MinioProps;
 import io.minio.GetPresignedObjectUrlArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
+import io.minio.http.Method;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -32,9 +35,12 @@ public class BucketService {
     public String getUrl(String file) {
         try {
             var object = GetPresignedObjectUrlArgs.builder()
+                    .method(Method.GET)
                     .bucket(props.getBucketName())
+                    .object(file)
+                    .expiry(1, TimeUnit.HOURS)
                     .build();
-            return "";
+            return client.getPresignedObjectUrl(object);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

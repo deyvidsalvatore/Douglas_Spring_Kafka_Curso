@@ -2,8 +2,9 @@ spring:
   application:
     name: faturamentos
 server:
-  port: 8083
+  port: 8084
 minio:
   url: 'http://localhost:9000'
+  bucket-name: icompras.faturas
   access-key: minioadmin
   secret-key: minioadmin123
