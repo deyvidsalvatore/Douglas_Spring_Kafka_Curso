@@ -1,3 +1,9 @@
 spring:
   application:
     name: faturamentos
+server:
+  port: 8083
+minio:
+  url: 'http://localhost:9000'
+  access-key: minioadmin
+  secret-key: minioadmin123
