@@ -2,6 +2,7 @@ package com.github.deyvidsalvatore.icompras.faturamentos.subscriber;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.deyvidsalvatore.icompras.faturamentos.mapper.PedidoMapper;
+import com.github.deyvidsalvatore.icompras.faturamentos.service.GeradorNotaFiscalService;
 import com.github.deyvidsalvatore.icompras.faturamentos.subscriber.representation.DetalhePedidoRepresentation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
