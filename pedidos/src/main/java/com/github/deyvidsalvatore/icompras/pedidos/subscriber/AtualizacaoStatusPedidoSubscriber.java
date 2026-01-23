@@ -2,6 +2,7 @@ package com.github.deyvidsalvatore.icompras.pedidos.subscriber;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.deyvidsalvatore.icompras.pedidos.service.AtualizacaoStatusPedidoService;
+import com.github.deyvidsalvatore.icompras.pedidos.subscriber.representation.AtualizacaoStatusPedidoRepresentation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -23,7 +24,19 @@ public class AtualizacaoStatusPedidoSubscriber {
             }
     )
     public void receberAtualizacao(String json) {
-      log.info("Recebendo atualização: {}", json);
+      log.info("Recebendo atualização de status: {}", json);
+      try {
+        var atualizacaoStatus = objectMapper.readValue(json, AtualizacaoStatusPedidoRepresentation.class);
+        this.service.atualizarStatus(
+                atualizacaoStatus.codigo(),
+                atualizacaoStatus.status(),
+                atualizacaoStatus.urlNotaFiscal(),
+                atualizacaoStatus.codigoRastreio()
+        );
+        log.info("Pedido atualizado com sucesso!");
+      } catch (Exception e) {
+          log.error("Erro ao atualizar status pedido: {}", e.getMessage());
+      }
 
     }
 }
