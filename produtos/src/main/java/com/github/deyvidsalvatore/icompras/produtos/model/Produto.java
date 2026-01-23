@@ -24,4 +24,9 @@ public class Produto implements Serializable {
 
     @Column(name = "ativo")
     private boolean ativo;
+
+    @PrePersist
+    public void prePersist() {
+        setAtivo(true);
+    }
 }

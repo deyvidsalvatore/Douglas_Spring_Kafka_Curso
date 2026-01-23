@@ -41,4 +41,9 @@ public class Cliente implements Serializable {
 
     @Column(name = "ativo")
     private boolean ativo;
+
+    @PrePersist
+    public void prePersist() {
+        setAtivo(true);
+    }
 }
