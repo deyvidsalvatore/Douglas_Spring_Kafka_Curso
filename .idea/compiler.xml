@@ -10,16 +10,6 @@
         <module name="servicos" />
         <module name="faturamentos" />
       </profile>
-      <profile name="Annotation profile for produtos" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.42/lombok-1.18.42.jar" />
-        </processorPath>
-        <module name="clientes" />
-        <module name="produtos" />
-      </profile>
       <profile name="Annotation profile for pedidos" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
@@ -31,12 +21,25 @@
         </processorPath>
         <module name="pedidos" />
       </profile>
+      <profile name="Annotation profile for logistica" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.42/lombok-1.18.42.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.42/lombok-1.18.42.jar" />
+        </processorPath>
+        <module name="clientes" />
+        <module name="produtos" />
+        <module name="logistica" />
+      </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="clientes" options="-parameters" />
       <module name="faturamentos" options="-parameters" />
+      <module name="logistica" options="-parameters" />
       <module name="pedidos" options="-parameters" />
       <module name="produtos" options="-parameters" />
       <module name="servicos" options="-parameters" />
