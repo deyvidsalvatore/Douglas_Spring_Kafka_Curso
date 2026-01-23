@@ -21,6 +21,9 @@ VALUES
     ('Maria Oliveira', '23456789012', 'Av. Brasil', '250', 'Jardins', 'maria.oliveira@email.com', '11999990002'),
     ('Carlos Pereira', '34567890123', 'Rua Afonso Pena', '45', 'Vila Nova', 'carlos.p@email.com', '11999990003');
 
+ALTER TABLE clientes ADD COLUMN ativo boolean;
+UPDATE clientes SET ativo = true;
+
 \c icompraprodutos
 
 CREATE TABLE produtos (
@@ -35,6 +38,9 @@ VALUES
     ('Mouse Logitech', 120.50),
     ('Teclado Mecânico', 350.90),
     ('Monitor 27 Polegadas', 1899.99);
+
+ALTER TABLE produtos ADD COLUMN ativo boolean;
+UPDATE produtos SET ativo = true;
 
 \c icomprapedidos
 

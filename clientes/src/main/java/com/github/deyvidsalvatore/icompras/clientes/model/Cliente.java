@@ -38,4 +38,7 @@ public class Cliente implements Serializable {
 
     @Column(length = 20)
     private String telefone;
+
+    @Column(name = "ativo")
+    private boolean ativo;
 }

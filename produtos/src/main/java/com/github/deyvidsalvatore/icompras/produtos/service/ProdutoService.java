@@ -20,4 +20,9 @@ public class ProdutoService {
     public Optional<Produto> buscarPorCodigo(Long codigo) {
         return produtoRepository.findById(codigo);
     }
+
+    public void deletar(Produto produto) {
+        produto.setAtivo(false);
+        produtoRepository.save(produto);
+    }
 }
